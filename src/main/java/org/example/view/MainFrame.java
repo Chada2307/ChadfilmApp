@@ -32,13 +32,22 @@ public class MainFrame extends JFrame {
         String[] columns = {"Tytuł", "Opis", "Gatunek", "Ocena"};
 
         tableModel = new DefaultTableModel(columns, 0){
-
             @Override
             public boolean isCellEditable(int row, int column){
                 return false;
             }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex){
+
+                if (columnIndex == 3){
+                    return Integer.class;
+                }
+                return String.class;
+            }
         };
         table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
