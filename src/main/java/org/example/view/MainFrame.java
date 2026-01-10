@@ -3,9 +3,11 @@ package org.example.view;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 public class MainFrame extends JFrame {
-
+    private JMenuItem itemPdf; // pdf
     private JTable table;
     private DefaultTableModel tableModel;
     private JLabel statusLabel;
@@ -54,18 +56,40 @@ public class MainFrame extends JFrame {
     private void initMenu(){
         JMenuBar menuBar = new JMenuBar();
         JMenu menuPlik = new JMenu("Plik");
-        itemDodaj = new JMenuItem("Dodaj film");
-        itemUsun= new JMenuItem("Usuń zaznaczony");
-        itemWyjscie= new JMenuItem("Wyjście");
+        menuPlik.setMnemonic(KeyEvent.VK_P); // alt + p otwiera menu
+
+
+
+        itemDodaj = new JMenuItem("Dodaj film", KeyEvent.VK_D);
+        // ctrl + n nowy film
+        itemDodaj.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
+
+
+        itemUsun= new JMenuItem("Usuń zaznaczony", KeyEvent.VK_U);
+        itemUsun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+
+        itemPdf = new JMenuItem("Drukuj do PDF");
+        itemPdf.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
+
+        itemWyjscie= new JMenuItem("Wyjście", KeyEvent.VK_W);
+        itemWyjscie.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
 
         menuPlik.add(itemDodaj);
         menuPlik.add(itemUsun);
         menuPlik.addSeparator();
+        menuPlik.add(itemPdf);
+        menuPlik.addSeparator();
         menuPlik.add(itemWyjscie);
 
         JMenu menuKonto = new JMenu("Konto");
-        itemZaloguj = new JMenuItem("Zaloguj");
-        itemRejestracja = new JMenuItem("Rejestracja");
+        menuKonto.setMnemonic(KeyEvent.VK_K);
+
+        itemZaloguj = new JMenuItem("Zaloguj", KeyEvent.VK_Z);
+        itemZaloguj.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK));
+
+        itemRejestracja = new JMenuItem("Rejestracja", KeyEvent.VK_R);
+        itemRejestracja.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+
         menuKonto.add(itemZaloguj);
         menuKonto.add(itemRejestracja);
 
@@ -73,6 +97,7 @@ public class MainFrame extends JFrame {
         menuBar.add(menuKonto);
         setJMenuBar(menuBar);
     }
+    public JMenuItem getItemPdf(){ return itemPdf; }// getter zeby kontroler widzial o co chodzi
 
     private void initStatusLabel(){
         statusLabel = new JLabel(" Gotowy ");

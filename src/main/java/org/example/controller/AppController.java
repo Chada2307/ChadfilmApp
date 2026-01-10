@@ -3,15 +3,25 @@ package org.example.controller;
 import org.example.dao.FilmDAO;
 import org.example.dao.UserDAO;
 import org.example.model.Film;
+import org.example.utils.PdfService;
 import org.example.view.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
+
 public class AppController {
+    //instancja logera dla tej klasy
+    private static final Logger logger = LogManager.getLogger(AppController.class);
+
     private MainFrame view;
     private FilmDAO filmDAO;
     private UserDAO userDAO;
@@ -29,6 +39,7 @@ public class AppController {
     private void initLogic(){
         view.getItemDodaj().addActionListener(e -> handleAdding());
         view.getItemUsun().addActionListener(e -> handleDeletion());
+        view.getItemPdf().addActionListener(e -> handlePDF()); // listener do pdfa
         view.getItemZaloguj().addActionListener(e -> handleLogin());
         view.getItemRejestracja().addActionListener(e -> handleRegister());
         view.getItemWyjscie().addActionListener(e -> System.exit(0));
@@ -93,7 +104,9 @@ public class AppController {
                 filmDAO.addMovie(nowyFilm);
                 view.setStatus("Dodano film: " + title);
                 refreshTable();
+                logger.info("dodano nowy film: {} ({})", title, type);
             }catch(SQLException e ){
+                logger.error("Błąd podczas dodawania filmu", e);
                 JOptionPane.showMessageDialog(view, "Błąd bazy: " + e.getMessage());
             }
         }
@@ -114,8 +127,30 @@ public class AppController {
                 filmDAO.deleteMovie(title);
                 view.setStatus("Usunięto: " + title);
                 refreshTable();
+                logger.info("Usunięto film o tytule: {}", title);
             } catch (SQLException e) {
+                logger.error("Nie udało się usunąć filmu", e);
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void handlePDF(){
+
+        JFileChooser file = new JFileChooser();
+        file.setSelectedFile(new File("lista_filmów.pdf"));
+        int userSelect = file.showSaveDialog(view);
+
+        if(userSelect == JFileChooser.APPROVE_OPTION){
+            File fileToSave = file.getSelectedFile();
+            try{
+                PdfService.generujPDF(view.getTable(), fileToSave.getAbsolutePath());
+                JOptionPane.showMessageDialog(view, "PDF został wygenerowany");
+                logger.info("Użytkownik wygenerował raport PDF: {}", fileToSave.getName());
+            }catch(Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(view, "Błąd generowania PDF: " + e.getMessage());
+                logger.error("Błąd generowania PDF: " + e.getMessage());
             }
         }
     }

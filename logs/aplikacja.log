@@ -1,0 +1,4 @@
+2026-01-10 16:55:50 [AWT-EventQueue-0] INFO  org.example.controller.AppController - dodano nowy film: film do testu logu (Akcja)
+2026-01-10 16:56:05 [AWT-EventQueue-0] INFO  org.example.controller.AppController - Usunięto film o tytule: film do testu logu
+2026-01-10 17:25:52 [AWT-EventQueue-0] INFO  org.example.controller.AppController - Użytkownik wygenerował raport PDF: lista_filmów.pdf
+2026-01-10 17:27:47 [AWT-EventQueue-0] INFO  org.example.controller.AppController - Użytkownik wygenerował raport PDF: lista_filmów.pdf
