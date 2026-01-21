@@ -11,22 +11,22 @@ import java.sql.Connection;
 
 public class App {
     public static void main(String[] args) {
-
+//
 //        try {
 //            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 //        } catch (Exception ignored) {}
 
         SwingUtilities.invokeLater(() -> {
             try {
-                // 1. Połączenie z bazą
+                // Połączenie z bazą
                 Dbconn db = new Dbconn();
                 Connection conn = db.getConnection();
 
-                // 2. Utworzenie warstwy danych (DAO)
+                // 2. Utworzenie warstwy danych
                 FilmDAO filmDAO = new FilmDAO(conn);
                 UserDAO userDAO = new UserDAO(conn);
 
-                // 3. Utworzenie widoku (View)
+                // 3. Utworzenie widoku
                 MainFrame view = new MainFrame();
 
                 // 4. Utworzenie kontrolera, który to wszystko łączy

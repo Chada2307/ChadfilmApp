@@ -12,6 +12,7 @@ public class UserDAO {
     public UserDAO(Connection conn){
         this.conn = conn;
     }
+
     public boolean login(String user, String pass) {
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {

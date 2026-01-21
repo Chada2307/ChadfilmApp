@@ -3,10 +3,12 @@ package org.example.controller;
 import org.example.dao.FilmDAO;
 import org.example.dao.UserDAO;
 import org.example.model.Film;
-import org.example.utils.PdfService;
+import org.example.utils.PdfManager;
+
 import org.example.view.MainFrame;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.sql.SQLException;
@@ -39,7 +41,10 @@ public class AppController {
     private void initLogic(){
         view.getItemDodaj().addActionListener(e -> handleAdding());
         view.getItemUsun().addActionListener(e -> handleDeletion());
-        view.getItemPdf().addActionListener(e -> handlePDF()); // listener do pdfa
+
+        view.getItemEksportPdf().addActionListener(e -> handlePDF()); // listener do pdfa
+        view.getItemDrukujPdf().addActionListener(e ->  handlePrintPDF()); // listener do pdfa
+
         view.getItemZaloguj().addActionListener(e -> handleLogin());
         view.getItemRejestracja().addActionListener(e -> handleRegister());
         view.getItemWyjscie().addActionListener(e -> System.exit(0));
@@ -135,22 +140,41 @@ public class AppController {
         }
     }
 
-    private void handlePDF(){
+    private void handlePDF() {
+        JFileChooser ch = new JFileChooser();
+        ch.setSelectedFile(new File("filmy_raport.pdf"));
 
+        if (ch.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+            File file = ch.getSelectedFile();
+            // Sprawdzenie czy user dodał .pdf, jak nie to dodajemy
+            if (!file.getName().toLowerCase().endsWith(".pdf")) {
+                file = new File(file.getParentFile(), file.getName() + ".pdf");
+            }
+
+            try {
+                PdfManager.eksportujDoPDF(view.getTable(), file);
+
+                JOptionPane.showMessageDialog(view, "Pomyślnie wyeksportowano do PDF!");
+                logger.info("Wyeksportowano dane do pliku: {}", file.getAbsolutePath());
+
+            } catch (Exception e) {
+                logger.error("Błąd eksportu PDF", e);
+                JOptionPane.showMessageDialog(view, "Błąd: " + e.getMessage());
+            }
+        }
+    }
+    private void handlePrintPDF(){
         JFileChooser file = new JFileChooser();
-        file.setSelectedFile(new File("lista_filmów.pdf"));
-        int userSelect = file.showSaveDialog(view);
-
-        if(userSelect == JFileChooser.APPROVE_OPTION){
-            File fileToSave = file.getSelectedFile();
+        file.setDialogTitle("Wybierz plik pdf do wydruku");
+        file.setFileFilter(new FileNameExtensionFilter("Pliki PDF","pdf"));
+        if(file.showOpenDialog(view) == JFileChooser.APPROVE_OPTION){
+            File pdfile = file.getSelectedFile();
             try{
-                PdfService.generujPDF(view.getTable(), fileToSave.getAbsolutePath());
-                JOptionPane.showMessageDialog(view, "PDF został wygenerowany");
-                logger.info("Użytkownik wygenerował raport PDF: {}", fileToSave.getName());
-            }catch(Exception e){
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(view, "Błąd generowania PDF: " + e.getMessage());
-                logger.error("Błąd generowania PDF: " + e.getMessage());
+                PdfManager.drukujPlikPDF(pdfile);
+                logger.info("Wyslano plik do drukarki:{}", pdfile.getName());
+            }catch (Exception e){
+                logger.error("Blad drukowania pliku pdf", e);
+                JOptionPane.showMessageDialog(view, "nie udalo sie wydrukowac "+ e.getMessage());
             }
         }
     }

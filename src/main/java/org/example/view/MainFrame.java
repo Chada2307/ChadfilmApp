@@ -7,7 +7,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class MainFrame extends JFrame {
-    private JMenuItem itemPdf; // pdf
+    private JMenuItem itemEksportPdf; // pdf
+    private JMenuItem itemDrukujPdf; // pdf
     private JTable table;
     private DefaultTableModel tableModel;
     private JLabel statusLabel;
@@ -58,8 +59,6 @@ public class MainFrame extends JFrame {
         JMenu menuPlik = new JMenu("Plik");
         menuPlik.setMnemonic(KeyEvent.VK_P); // alt + p otwiera menu
 
-
-
         itemDodaj = new JMenuItem("Dodaj film", KeyEvent.VK_D);
         // ctrl + n nowy film
         itemDodaj.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
@@ -68,8 +67,11 @@ public class MainFrame extends JFrame {
         itemUsun= new JMenuItem("Usuń zaznaczony", KeyEvent.VK_U);
         itemUsun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
-        itemPdf = new JMenuItem("Drukuj do PDF");
-        itemPdf.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
+        itemEksportPdf = new JMenuItem("Eksportuj do PDF");
+        itemEksportPdf.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
+
+        itemDrukujPdf = new JMenuItem("Drukuj");
+        itemDrukujPdf.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
 
         itemWyjscie= new JMenuItem("Wyjście", KeyEvent.VK_W);
         itemWyjscie.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
@@ -77,7 +79,8 @@ public class MainFrame extends JFrame {
         menuPlik.add(itemDodaj);
         menuPlik.add(itemUsun);
         menuPlik.addSeparator();
-        menuPlik.add(itemPdf);
+        menuPlik.add(itemEksportPdf);
+        menuPlik.add(itemDrukujPdf);
         menuPlik.addSeparator();
         menuPlik.add(itemWyjscie);
 
@@ -97,7 +100,8 @@ public class MainFrame extends JFrame {
         menuBar.add(menuKonto);
         setJMenuBar(menuBar);
     }
-    public JMenuItem getItemPdf(){ return itemPdf; }// getter zeby kontroler widzial o co chodzi
+    public JMenuItem getItemEksportPdf(){ return itemEksportPdf; }// getter zeby kontroler widzial o co chodzi
+    public JMenuItem getItemDrukujPdf(){ return itemDrukujPdf; }
 
     private void initStatusLabel(){
         statusLabel = new JLabel(" Gotowy ");
